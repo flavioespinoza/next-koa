@@ -1,6 +1,8 @@
 const Koa = require('koa')
-const next = require('next')
 const Router = require('koa-router')
+const cors = require("kcors");
+
+const next = require('next')
 
 const port = parseInt(process.env.PORT, 10) || 3000
 const dev = process.env.NODE_ENV !== 'production'
@@ -9,7 +11,9 @@ const handle = app.getRequestHandler()
 
 app.prepare().then(() => {
   const server = new Koa()
-  const router = new Router()
+	const router = new Router()
+
+	server.use(cors());
 
   router.get('/a', async ctx => {
     await app.render(ctx.req, ctx.res, '/a', ctx.query)
@@ -19,7 +23,11 @@ app.prepare().then(() => {
   router.get('/b', async ctx => {
     await app.render(ctx.req, ctx.res, '/b', ctx.query)
     ctx.respond = false
-  })
+	})
+	
+	router.get('/test', cors(), async (ctx, next) => {
+		ctx.body = { redirect_url: 'https://balls.com' };
+  });
 
   router.get('*', async ctx => {
     await handle(ctx.req, ctx.res)
