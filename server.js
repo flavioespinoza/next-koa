@@ -1,6 +1,5 @@
 const Koa = require('koa')
 const Router = require('koa-router')
-const cors = require("kcors");
 
 const next = require('next')
 
@@ -13,8 +12,6 @@ app.prepare().then(() => {
   const server = new Koa()
 	const router = new Router()
 
-	server.use(cors());
-
   router.get('/a', async ctx => {
     await app.render(ctx.req, ctx.res, '/a', ctx.query)
     ctx.respond = false
@@ -25,7 +22,7 @@ app.prepare().then(() => {
     ctx.respond = false
 	})
 	
-	router.get('/test', cors(), async (ctx, next) => {
+	router.get('/test', async (ctx, next) => {
 		ctx.body = { redirect_url: 'https://balls.com' };
   });
 
